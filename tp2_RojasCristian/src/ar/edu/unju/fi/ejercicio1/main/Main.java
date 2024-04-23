@@ -18,7 +18,7 @@ public class Main {
 		byte op;
 		do {
 			System.out.println("Menu:");
-			System.out.println("0 - Productos de prueba");
+			//System.out.println("0 - Productos de prueba");
 			System.out.println("1 - Crear Producto");
 			System.out.println("2 - Mostrar productos");
 			System.out.println("3 - Modificar producto");
@@ -27,7 +27,7 @@ public class Main {
 			op = sc.nextByte();
 			sc.nextLine();
 			switch (op) {
-				case 0:
+				/*case 0:
 					Producto producto0 = new Producto("P1", "Martillo", 10.5, OrigenFabricacion.ARGENTINA, Categoria.HERRAMIENTAS);
 					Producto producto1 = new Producto("P2", "Destornillador", 10.5, OrigenFabricacion.ARGENTINA, Categoria.HERRAMIENTAS);
 					Producto producto2 = new Producto("P3", "Intel I5 10400", 1000.8, OrigenFabricacion.ARGENTINA, Categoria.INFORMATICA);
@@ -36,7 +36,7 @@ public class Main {
 					listaProductos.add(producto1);
 					listaProductos.add(producto2);
 					listaProductos.add(producto3);
-					break;
+					break;*/
 				case 1:
 					System.out.println("Alta de producto:");
 					System.out.print("Ingrese código del producto: ");
