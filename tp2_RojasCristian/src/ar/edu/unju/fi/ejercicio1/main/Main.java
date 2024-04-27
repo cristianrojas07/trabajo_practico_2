@@ -2,7 +2,6 @@ package ar.edu.unju.fi.ejercicio1.main;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
 import ar.edu.unju.fi.ejercicio1.model.Producto;
 import ar.edu.unju.fi.ejercicio1.model.Producto.Categoria;
 import ar.edu.unju.fi.ejercicio1.model.Producto.OrigenFabricacion;
@@ -15,7 +14,7 @@ public class Main {
 		ArrayList<Producto> listaProductos = new ArrayList<>();
 		Scanner sc = new Scanner(System.in);
 		
-		byte op;
+		byte op = 0;
 		do {
 			System.out.println("Menu:");
 			//System.out.println("0 - Productos de prueba");
@@ -24,7 +23,21 @@ public class Main {
 			System.out.println("3 - Modificar producto");
 			System.out.println("4 - Salir");
 			System.out.print("Ingrese una opción: ");
-			op = sc.nextByte();
+			boolean opcionValida = false;
+			while(!opcionValida) {
+				try {
+					op = sc.nextByte();
+					if (op > 0 && op < 5) {
+						opcionValida = true;	
+					}else {
+						System.out.print("Ingrese una opción válida: ");
+					}
+				}catch (Exception ex){
+					System.out.println("Ingrese una opción válida. Solo se permiten valores enteros.");
+					sc.nextLine();
+				}
+			}
+			
 			sc.nextLine();
 			switch (op) {
 				/*case 0:
@@ -38,41 +51,68 @@ public class Main {
 					listaProductos.add(producto3);
 					break;*/
 				case 1:
-					System.out.println("Alta de producto:");
+					System.out.println("-- Alta de producto --");
 					System.out.print("Ingrese código del producto: ");
 					String codigo = sc.nextLine();
+					while(codigo.isBlank()) {
+						System.out.println("El código no puede ser vacío.");
+						System.out.print("Ingrese código del producto: ");
+						codigo = sc.nextLine();
+					}
+					
 					System.out.print("Ingrese descripción del producto: ");
 					String descripcion = sc.nextLine();
-					System.out.print("Ingrese precio del producto: ");
-					double precio = sc.nextDouble();
-					sc.nextLine();
+					while(descripcion.isBlank()) {
+						System.out.println("La descripción no puede ser vacía.");
+						System.out.print("Ingrese descripción del producto: ");
+						descripcion = sc.nextLine();
+					}
+					
+					System.out.print("Ingrese precio del producto (ej. 700.5): ");
+                    double precio = 0;
+					boolean precioValido = false;
+					while(!precioValido) {
+						String precioDestinoString = sc.nextLine();
+						try {
+							precio = Double.parseDouble(precioDestinoString);
+							
+							if (precio > 0) { 
+								precioValido = true;
+							}else {
+								System.out.print("Por favor ingrese un precio válido (ej. 700.5): ");
+							}
+						} catch (NumberFormatException e) {
+							System.out.print("Por favor ingrese un precio válido (ej. 700.5): ");
+						}
+					}
+					
 					System.out.println("---- Origen de fabricación ----");
 					for (int i = 0; i < OrigenFabricacion.values().length; i++) {
 						System.out.println((i+1) + " - " + OrigenFabricacion.values()[i]);
 					}
-					System.out.print("Ingrese Origen de fabricación del producto: ");
-					byte origenFabricacionByte = sc.nextByte();
-					OrigenFabricacion origenFabricacion = OrigenFabricacion.values()[origenFabricacionByte-1];
+					
+					OrigenFabricacion origenFabricacion = ValidarOrigenFabricacion(sc);
 					
 					System.out.println("---- Categoría ----");
 					for (int i = 0; i < Categoria.values().length; i++) {
 						System.out.println((i+1) + " - " + Categoria.values()[i]);
 					}
-					
-					System.out.print("Ingrese Categoría del producto: ");
-					byte categoriaByte = sc.nextByte();
-					Categoria categoria = Categoria.values()[categoriaByte-1];
+					Categoria categoria = ValidarCategoria(sc);
 					
 					Producto producto = new Producto(codigo, descripcion, precio, origenFabricacion, categoria);
 					
 					listaProductos.add(producto);
 					break;
 				case 2:
+					if (!ListaTieneElementos(listaProductos)) break;
+					
 					for (Producto prod : listaProductos) {
 						System.out.println(prod);
 					}
 					break;
 				case 3:
+					if (!ListaTieneElementos(listaProductos)) break;
+					
 					System.out.print("Ingrese código de producto a modificar: ");
 					String codigoBuscar = sc.nextLine();
 					Producto productoModificar = null;
@@ -99,9 +139,7 @@ public class Main {
 					for (int i = 0; i < OrigenFabricacion.values().length; i++) {
 						System.out.println((i+1) + " - " + OrigenFabricacion.values()[i]);
 					}
-					System.out.print("Ingrese el nuevo origen de fabricación: ");
-					origenFabricacionByte = sc.nextByte();
-					origenFabricacion = OrigenFabricacion.values()[origenFabricacionByte-1];
+					origenFabricacion = ValidarOrigenFabricacion(sc);
 					
 					productoModificar.setOrigenFabricacion(origenFabricacion);
 					
@@ -109,11 +147,7 @@ public class Main {
 					for (int i = 0; i < Categoria.values().length; i++) {
 						System.out.println((i+1) + " - " + Categoria.values()[i]);
 					}
-					
-					System.out.print("Ingrese la nueva categoria: ");
-					categoriaByte = sc.nextByte();
-					categoria = Categoria.values()[categoriaByte-1];
-					
+					categoria = ValidarCategoria(sc);
 					productoModificar.setCategoria(categoria);
 					System.out.println("Producto modificado..");
 					break;
@@ -129,5 +163,59 @@ public class Main {
 		
 		sc.close();
 	}
-
+	
+	private static boolean ListaTieneElementos(ArrayList<Producto> productos) {
+    	if(productos.size() == 0) {
+    		System.out.println("\nNo existen productos agregados. Por favor dé de alta un producto.");
+			return false;
+		}
+    	
+    	return true;
+    }
+	
+	private static OrigenFabricacion ValidarOrigenFabricacion(Scanner sc) {
+		boolean origenFabricacionValido = false;
+		int origenFabricacionTamanio = OrigenFabricacion.values().length;
+		byte opcion = 0;
+		String msj = "Ingrese Origen de fabricación del producto [1 - " + origenFabricacionTamanio +"]: ";
+		System.out.print(msj);
+		while(!origenFabricacionValido) {
+			try {
+				String origenFabricacionString = sc.nextLine();
+				opcion = Byte.parseByte(origenFabricacionString);
+				if (opcion > 0 && opcion <= origenFabricacionTamanio) {
+					origenFabricacionValido = true;
+				}else {
+					System.out.print("Opción Inválida. " + msj);
+				}
+			}catch(Exception ex){
+				System.out.print("Opción Inválida. " + msj);
+			}
+		}
+		
+		return OrigenFabricacion.values()[opcion-1];
+	}
+	
+	private static Categoria ValidarCategoria(Scanner sc) {
+		boolean categoriaValida = false;
+		int categoriaTamanio = OrigenFabricacion.values().length;
+		byte opcion = 0;
+		String msj = "Ingrese Categoría del producto [1 - " + categoriaTamanio +"]: ";
+		System.out.print(msj);
+		while(!categoriaValida) {
+			try {
+				String origenFabricacionString = sc.nextLine();
+				opcion = Byte.parseByte(origenFabricacionString);
+				if (opcion > 0 && opcion <= categoriaTamanio) {
+					categoriaValida = true;
+				}else {
+					System.out.print("Opción Inválida. " + msj);
+				}
+			}catch(Exception ex){
+				System.out.print("Opción Inválida. " + msj);
+			}
+		}
+		
+		return Categoria.values()[opcion-1];
+	}
 }
