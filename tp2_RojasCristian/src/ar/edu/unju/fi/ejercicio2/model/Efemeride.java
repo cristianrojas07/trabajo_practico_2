@@ -11,6 +11,16 @@ public class Efemeride {
 	public Efemeride() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
+
+	public Efemeride(String codigo, Mes mes, int dia, String detalle) {
+		super();
+		this.codigo = codigo;
+		this.mes = mes;
+		this.dia = dia;
+		this.detalle = detalle;
+	}
 
 	@Override
 	public String toString() {
