@@ -28,7 +28,7 @@ public class Main {
 			while(!opcionValida) {
 				try {
 					op = sc.nextByte();
-					if (op >= 0 && op < 6) {
+					if (op > 0 && op < 6) {
 						opcionValida = true;	
 					}else {
 						System.out.print("Ingrese una opción válida: ");
@@ -212,8 +212,8 @@ public class Main {
 		System.out.print(msj);
 		while(!mesValido) {
 			try {
-				String origenFabricacionString = sc.nextLine();
-				opcion = Byte.parseByte(origenFabricacionString);
+				String mesString = sc.nextLine();
+				opcion = Byte.parseByte(mesString);
 				if (opcion > 0 && opcion <= mesTamanio) {
 					mesValido = true;
 				}else {
