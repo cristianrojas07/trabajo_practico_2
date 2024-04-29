@@ -6,6 +6,7 @@ public class Producto {
 	private double precioUnitario;
 	private OrigenFabricacion origenFabricacion;
 	private Categoria categoria;
+	private boolean estado;
 	
 	public enum OrigenFabricacion {
 		ARGENTINA, CHINA, BRASIL, URUGUAY
@@ -18,8 +19,6 @@ public class Producto {
 	public Producto() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	
 
 	public Producto(String codigo, String descripcion, double precioUnitario, OrigenFabricacion origenFabricacion,
 			Categoria categoria) {
@@ -31,7 +30,16 @@ public class Producto {
 		this.categoria = categoria;
 	}
 
-
+	public Producto(String codigo, String descripcion, double precioUnitario, OrigenFabricacion origenFabricacion,
+			Categoria categoria, boolean estado) {
+		super();
+		this.codigo = codigo;
+		this.descripcion = descripcion;
+		this.precioUnitario = precioUnitario;
+		this.origenFabricacion = origenFabricacion;
+		this.categoria = categoria;
+		this.estado = estado;
+	}
 
 	public String getCodigo() {
 		return codigo;
@@ -78,4 +86,14 @@ public class Producto {
 		return "Producto [codigo=" + codigo + ", descripcion=" + descripcion + ", precioUnitario=" + precioUnitario
 				+ ", origenFabricacion=" + origenFabricacion + ", categoria=" + categoria + "]";
 	}
+
+	public boolean isEstado() {
+		return estado;
+	}
+
+	public void setEstado(boolean estado) {
+		this.estado = estado;
+	}
+	
+	
 }
