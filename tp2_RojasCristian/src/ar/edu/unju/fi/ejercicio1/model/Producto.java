@@ -87,7 +87,12 @@ public class Producto {
 				+ ", origenFabricacion=" + origenFabricacion + ", categoria=" + categoria + "]";
 	}
 
-	public boolean isEstado() {
+	public String mostrarProducto() {
+		return codigo + " - descripcion=" + descripcion + ", precioUnitario=" + precioUnitario
+				+ ", origenFabricacion=" + origenFabricacion + ", categoria=" + categoria + ", Stock: " + ((estado) ? "Si" : "No");
+	}
+	
+	public boolean getEstado() {
 		return estado;
 	}
 
