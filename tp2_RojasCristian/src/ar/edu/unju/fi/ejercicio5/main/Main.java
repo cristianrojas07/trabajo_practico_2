@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-import ar.edu.unju.fi.ejercicio1.model.Producto;
-import ar.edu.unju.fi.ejercicio1.model.Producto.Categoria;
-import ar.edu.unju.fi.ejercicio1.model.Producto.OrigenFabricacion;
 import ar.edu.unju.fi.ejercicio5.interfaces.Pago;
 import ar.edu.unju.fi.ejercicio5.model.PagoEfectivo;
 import ar.edu.unju.fi.ejercicio5.model.PagoTarjeta;
+import ar.edu.unju.fi.ejercicio5.model.Producto;
+import ar.edu.unju.fi.ejercicio5.model.Producto.Categoria;
+import ar.edu.unju.fi.ejercicio5.model.Producto.OrigenFabricacion;
 
 public class Main {
 
@@ -36,8 +36,20 @@ public class Main {
 			System.out.println("1 - Mostrar Productos");
 			System.out.println("2 - Realizar compra");
 			System.out.println("3 - Salir");
-			System.out.print("Elegir opción: ");
-			op = sc.nextByte();
+			String msj = "Ingrese una opción: ";
+			System.out.print(msj);
+			while(true) {
+				try {
+					op = sc.nextByte();
+					if (op > 0 && op < 4) break;
+					
+					MostrarMensajeError(msj);
+				}catch (Exception ex){
+					MostrarMensajeError(msj);
+					sc.nextLine();
+				}
+			}
+			
 			sc.nextLine();
 			switch (op) {
 				case 1: {
@@ -46,24 +58,28 @@ public class Main {
 				}
 				case 2: {
 					while(true) {
-						MostrarProductos(productos, "\n-- Lista de productos --");
-						MostrarProductos(carrito, "\n-- Carrito --");
-						System.out.println("\nPara salir del carrito de compra escriba 0.");
-						System.out.print("Elija un producto para agregar al carrito: ");
-						opCarrito = sc.nextByte();
-						sc.nextLine();
-						if(opCarrito == 0) break;
-						if (opCarrito >= 1 && opCarrito <= 15) {
-							Producto productoSeleccionado = productos.get(opCarrito-1);
-							if (!productoSeleccionado.getEstado())
-							{
-								System.out.println("\nNo hay stock del producto seleccionado.");
+						try {
+							MostrarProductos(productos, "\n-- Lista de productos --");
+							MostrarProductos(carrito, "\n-- Carrito --");
+							System.out.println("\nPara salir del carrito de compra escriba 0.");
+							System.out.print("Elija un producto para agregar al carrito: ");
+							opCarrito = sc.nextByte();
+							sc.nextLine();
+							if(opCarrito == 0) break;
+							if (opCarrito >= 1 && opCarrito <= 15) {
+								Producto productoSeleccionado = productos.get(opCarrito-1);
+								if (!productoSeleccionado.getEstado())
+								{
+									System.out.println("\nNo hay stock del producto seleccionado.");
+								}else {
+									carrito.add(productoSeleccionado);
+									productoSeleccionado.setEstado(false);
+								}
 							}else {
-								carrito.add(productoSeleccionado);
-								productoSeleccionado.setEstado(false);
+								System.out.println("Opción incorrecta.");
 							}
-						}else {
-							System.out.println("Opción incorrecta.");
+						}catch(Exception ex) {
+							System.out.println("Ocurrió un error. Vuelva a intentarlo.");
 						}
 					}
 					
@@ -77,10 +93,22 @@ public class Main {
 						System.out.println("\nOpciones de pago");
 						System.out.println("1 - Pago efectivo");
 						System.out.println("2 - Pago con tarjeta");
-						System.out.print("Elija una opción de pago: ");
-						opPago = sc.nextByte();
+						
+						msj = "Elija una opción de pago: ";
+						System.out.print(msj);
+						while(true) {
+							try {
+								opPago = sc.nextByte();
+								if (opPago > 0 && opPago < 3) break;
+								
+								MostrarMensajeError(msj);
+							}catch (Exception ex){
+								MostrarMensajeError(msj);
+								sc.nextLine();
+							}
+						}
+						
 						sc.nextLine();
-
 						double montoAbonado = calcularMontoAbonado(carrito);
 				        
 				        switch (opPago) {
@@ -119,13 +147,17 @@ public class Main {
 		sc.close();
 	}
 	
+	private static void MostrarMensajeError(String msj) {
+		System.out.print("Opción inválida. " + msj);
+	}
+	
 	private static void MostrarProductos(List<Producto> productos, String msj) {
 		if (productos.size() > 0) {
 			System.out.println(msj);
 		}
 		
 		for (int i = 0; i < productos.size(); i++) {
-			System.out.println(productos.get(i).mostrarProducto());	
+			System.out.println(productos.get(i));	
 		}
 	}
 	
